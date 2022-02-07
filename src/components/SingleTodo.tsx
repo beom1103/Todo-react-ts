@@ -37,7 +37,7 @@ const SingleTodo = ({ todo }: Props) => {
   };
 
   const [edit, setEdit] = useState<boolean>(false);
-  const [editTodo, setEditTodo] = useState<string>(todoAt);
+  const [editTodo, setEditTodo] = useState<string>(todo.todo);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
