@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { todoAtom, todosAtom } from '../models/models';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Todo } from '../models/models';
 import {
   XCircleIcon,
@@ -8,11 +10,12 @@ import {
 
 type Props = {
   todo: Todo;
-  todos: Todo[];
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
 };
 
-const SingleTodo = ({ todo, todos, setTodos }: Props) => {
+const SingleTodo = ({ todo }: Props) => {
+  const todoAt = useRecoilValue(todoAtom);
+  const [todos, setTodos] = useRecoilState(todosAtom);
+
   const handleDone = (id: number) => {
     setTodos(
       todos.map(todo =>
@@ -34,7 +37,7 @@ const SingleTodo = ({ todo, todos, setTodos }: Props) => {
   };
 
   const [edit, setEdit] = useState<boolean>(false);
-  const [editTodo, setEditTodo] = useState<string>(todo.todo);
+  const [editTodo, setEditTodo] = useState<string>(todoAt);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -43,7 +46,7 @@ const SingleTodo = ({ todo, todos, setTodos }: Props) => {
 
   return (
     <form
-      className="flex w-1/3	rounded-md p-[20px] mt-[15px] mx-1 bg-green-600 md:w-full"
+      className="flex w-1/3 rounded-md p-[20px] mt-[15px] bg-green-600 md:w-full"
       onSubmit={e => handleEdit(e, todo.id)}
     >
       {edit ? (
@@ -51,22 +54,18 @@ const SingleTodo = ({ todo, todos, setTodos }: Props) => {
           ref={inputRef}
           type="text"
           value={editTodo}
-          className="flex-1 p-[5px] text-[20px]  focus:outline-none"
+          className="rounded-lg todo-text"
           onChange={e => setEditTodo(e.target.value)}
         />
       ) : todo.isDone ? (
-        <s className="flex-1 p-[5px] text-[20px]  focus:outline-none">
-          {todo.todo}
-        </s>
+        <s className="todo-text">{todo.todo}</s>
       ) : (
-        <span className="flex-1 p-[5px] text-[20px]  focus:outline-none">
-          {todo.todo}
-        </span>
+        <span className="todo-text">{todo.todo}</span>
       )}
 
-      <div>
+      <div className="block">
         <span
-          className="ml-[10px] text-[25px] cursor-pointer"
+          className="icon"
           onClick={() => {
             if (!edit && !todo.isDone) {
               setEdit(!edit);
@@ -75,16 +74,10 @@ const SingleTodo = ({ todo, todos, setTodos }: Props) => {
         >
           <PencilIcon />
         </span>
-        <span
-          className="ml-[10px] text-[25px] cursor-pointer"
-          onClick={() => handleDelete(todo.id)}
-        >
+        <span className="icon" onClick={() => handleDelete(todo.id)}>
           <XCircleIcon />
         </span>
-        <span
-          className="ml-[10px] text-[25px] cursor-pointer"
-          onClick={() => handleDone(todo.id)}
-        >
+        <span className="icon" onClick={() => handleDone(todo.id)}>
           <CheckCircleIcon />
         </span>
       </div>

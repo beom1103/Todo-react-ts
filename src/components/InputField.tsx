@@ -1,13 +1,20 @@
 import React, { useRef } from 'react';
+import { todoAtom, todosAtom } from '../models/models';
+import { useRecoilState } from 'recoil';
 
-interface Props {
-  todo: string;
-  setTodo: React.Dispatch<React.SetStateAction<string>>;
-  handleAdd: (e: React.FormEvent) => void;
-}
-
-const InputFeild: React.FC<Props> = ({ todo, setTodo, handleAdd }) => {
+const InputFeild: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [todo, setTodo] = useRecoilState(todoAtom);
+  const [todos, setTodos] = useRecoilState(todosAtom);
+
+  const handleAdd = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (todo) {
+      setTodos([...todos, { id: Date.now(), todo: todo, isDone: false }]);
+    }
+    setTodo('');
+  };
 
   return (
     <form
