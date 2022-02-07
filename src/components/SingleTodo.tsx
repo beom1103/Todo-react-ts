@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { todoAtom, todosAtom } from '../models/models';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { todosAtom } from '../models/models';
+import { useRecoilState } from 'recoil';
 import { Todo } from '../models/models';
 import {
   XCircleIcon,
@@ -13,7 +13,6 @@ type Props = {
 };
 
 const SingleTodo = ({ todo }: Props) => {
-  const todoAt = useRecoilValue(todoAtom);
   const [todos, setTodos] = useRecoilState(todosAtom);
 
   const handleDone = (id: number) => {
